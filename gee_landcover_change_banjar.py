@@ -162,7 +162,7 @@ def peta_kemurnian(kelas_img):
         satu = kelas_img.eq(c)
         cnt = satu.reduceNeighborhood(
             reducer=ee.Reducer.sum(),
-            kernel=ee.Kernel.square(1, "pixels"))
+            kernel=ee.Kernel.square(1, "pixels", False))  # normalize=False agar hasilnya hitungan 0-9, bukan rata-rata 0-1
         total = total.where(kelas_img.eq(c), cnt)
     return total.rename("kemurnian")
 
