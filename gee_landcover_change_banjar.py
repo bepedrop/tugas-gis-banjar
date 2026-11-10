@@ -146,7 +146,7 @@ def komposit(tahun, roi):
 
 def kelas_referensi():
     """ESA WorldCover 2021 dipetakan ke 5 kelas tugas."""
-    wc = ee.Image("ESA/WorldCover/v200").select("Map")
+    wc = ee.ImageCollection("ESA/WorldCover/v200").first().select("Map")
     return wc.remap(WC_DARI, WC_KE, 0).rename("kelas")
 
 
