@@ -192,10 +192,16 @@ def akurasi(clf, validasi, komp, nama):
     print(f"\n--- Akurasi {nama} (validasi 30%, label WorldCover 2021) ---")
     print("Overall Accuracy:", round(matriks.accuracy().getInfo(), 4))
     print("Kappa:", round(matriks.kappa().getInfo(), 4))
+    # producers/consumersAccuracy bisa berupa list-of-lists di earthengine-api
+    # tertentu -> ratakan dulu sebelum round
+    def _ratakan(v):
+        if isinstance(v, list) and v and isinstance(v[0], list):
+            return [x for baris in v for x in baris]
+        return v
     print("Producer's accuracy per kelas:",
-          [round(x, 3) for x in matriks.producersAccuracy().getInfo()])
+          [round(x, 3) for x in _ratakan(matriks.producersAccuracy().getInfo())])
     print("User's accuracy per kelas:",
-          [round(x, 3) for x in matriks.consumersAccuracy().getInfo()])
+          [round(x, 3) for x in _ratakan(matriks.consumersAccuracy().getInfo())])
     print("Confusion matrix (baris=referensi, kolom=prediksi):")
     print(matriks.array().getInfo())
     return matriks
