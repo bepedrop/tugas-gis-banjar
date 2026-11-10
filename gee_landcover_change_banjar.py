@@ -167,10 +167,29 @@ def peta_kemurnian(kelas_img):
     return total.rename("kemurnian")
 
 
-def ambil_sampel(komposit_ref, kelas_img, roi):
+
+def hanya_geometri_dan_kelas(fc):
+    """Buang semua properti band dari fitur sampel, sisakan geometri + label.
+
+    PENTING (bug diperbaiki 11 Nov 2026): sampleRegions TIDAK menimpa
+    properti yang sudah ada pada fitur. Karena latih/validasi sudah membawa
+    band 2025, sampling 2026 tanpa strip ini diam-diam mengembalikan nilai
+    2025 — akurasi 2026 tercetak identik persis dengan 2025 (OA, Kappa,
+    bahkan confusion matrix). Strip dulu, baru sampleRegions 2026.
+    """
+    def _strip(f):
+        return ee.Feature(f.geometry(), {"kelas": f.get("kelas")})
+    return fc.map(_strip)
+
+
+def ambil_sampel(komposit_ref, kelas_img, roi, mask_bersama=None):
     """Sampel stratified dari WorldCover (murni >=8/9); split 70/30."""
     kemurnian = peta_kemurnian(kelas_img)
     dasar = komposit_ref.addBands(kelas_img).addBands(kemurnian)
+    if mask_bersama is not None:
+        # Sampel hanya dari piksel yang punya data di KEDUA tahun, supaya
+        # titik latih/validasi 2026 tidak jatuh di piksel tanpa data.
+        dasar = dasar.updateMask(mask_bersama)
     # stratifiedSample pada komposit 2025; hanya piksel murni yang lolos
     # (filter diterapkan pada hasil sampling)
     sampel = dasar.stratifiedSample(
@@ -192,16 +211,31 @@ def akurasi(clf, validasi, komp, nama):
     print(f"\n--- Akurasi {nama} (validasi 30%, label WorldCover 2021) ---")
     print("Overall Accuracy:", round(matriks.accuracy().getInfo(), 4))
     print("Kappa:", round(matriks.kappa().getInfo(), 4))
-    # producers/consumersAccuracy bisa berupa list-of-lists di earthengine-api
-    # tertentu -> ratakan dulu sebelum round
+    # producers/consumersAccuracy bisa berupa list bersarang (list-of-lists,
+    # bahkan list-of-list-of-lists) di earthengine-api tertentu -> ratakan
+    # rekursif dulu sebelum round (bug cetak 10 Nov 2026: round() gagal
+    # dengan TypeError karena nilai bersarang).
     def _ratakan(v):
-        if isinstance(v, list) and v and isinstance(v[0], list):
-            return [x for baris in v for x in baris]
-        return v
+        out = []
+        def _jalan(x):
+            if isinstance(x, list):
+                for y in x:
+                    _jalan(y)
+            else:
+                out.append(x)
+        _jalan(v)
+        return out
     print("Producer's accuracy per kelas:",
           [round(x, 3) for x in _ratakan(matriks.producersAccuracy().getInfo())])
-    print("User's accuracy per kelas:",
-          [round(x, 3) for x in _ratakan(matriks.consumersAccuracy().getInfo())])
+    # consumersAccuracy() di EE sering hanya mengembalikan [0.0], jadi
+    # User's accuracy dihitung manual dari confusion matrix:
+    # diagonal / total kolom.
+    _mat = matriks.array().getInfo()
+    _ua = []
+    for _j in range(len(_mat)):
+        _kol = sum(_mat[_i][_j] for _i in range(len(_mat)))
+        _ua.append(round(_mat[_j][_j] / _kol, 3) if _kol else 0.0)
+    print("User's accuracy per kelas (dari confusion matrix):", _ua)
     print("Confusion matrix (baris=referensi, kolom=prediksi):")
     print(matriks.array().getInfo())
     return matriks
@@ -257,26 +291,37 @@ def main():
     komp_b = komposit(TAHUN_B, roi)
     kelas_img = kelas_referensi()
 
-    latih, validasi = ambil_sampel(komp_a, kelas_img, roi)
-    # POOLED: lokasi latih yang sama dipakai dengan fitur 2026 juga
+    # Mask bersama: piksel harus punya data di KEDUA tahun. Tanpa ini total
+    # luas 2025 dan 2026 selisih (dulu 4.964 ha, 10 Nov 2026) dan matriks
+    # transisi tidak konsisten. Mask diambil dari band SR (bukan DEM,
+    # yang tidak bermask awan).
+    mask_bersama = (komp_a.select("SR_B2").mask()
+                   .And(komp_b.select("SR_B2").mask()))
+    latih, validasi = ambil_sampel(komp_a, kelas_img, roi, mask_bersama)
+    # POOLED: lokasi latih yang sama dipakai dengan fitur 2026 juga.
+    # Fitur lama HARUS di-strip dulu (lihat hanya_geometri_dan_kelas).
     latih_2026 = komp_b.sampleRegions(
-        collection=latih, scale=SKALA_M, geometries=False)
+        collection=hanya_geometri_dan_kelas(latih), scale=SKALA_M, geometries=False)
     latih_pooled = latih.merge(latih_2026)
     print(f"Baris latih pooled: {latih_pooled.size().getInfo()}")
     clf = ee.Classifier.smileRandomForest(N_POHON).train(
         latih_pooled, "kelas", BAND_FITUR)
     kls_a = komp_a.classify(clf).rename("kelas").toUint8()
     kls_b = komp_b.classify(clf).rename("kelas").toUint8()
+    kls_a = kls_a.updateMask(mask_bersama)
+    kls_b = kls_b.updateMask(mask_bersama)
 
     # ---- Akurasi per tahun (data validasi, terhadap label WorldCover) ----
     # validasi sudah membawa fitur 2025; untuk 2026 ambil fitur di titik sama
     validasi_2026 = komp_b.sampleRegions(
-        collection=validasi, scale=SKALA_M, geometries=False)
+        collection=hanya_geometri_dan_kelas(validasi), scale=SKALA_M, geometries=False)
     akurasi(clf, validasi, komp_a, f"validasi {TAHUN_A} (model pooled)")
     akurasi(clf, validasi_2026, komp_b, f"validasi {TAHUN_B} (model pooled)")
 
-    hitung_luas(kls_a, roi, f"klasifikasi {TAHUN_A}")
-    hitung_luas(kls_b, roi, f"klasifikasi {TAHUN_B}")
+    tot_a = hitung_luas(kls_a, roi, f"klasifikasi {TAHUN_A}")
+    tot_b = hitung_luas(kls_b, roi, f"klasifikasi {TAHUN_B}")
+    print(f"Selisih total luas 2026-2025: {tot_b - tot_a:,.1f} ha "
+          f"(harus ~0 setelah mask bersama diterapkan)")
     kode, _ = matriks_transisi(kls_a, kls_b, roi)
 
     # ---- Ekspor ke Google Drive ----
