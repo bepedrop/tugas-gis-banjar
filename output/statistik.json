@@ -1,174 +1,535 @@
 {
+ "versi": "GEE (utama, run final 11 Nov 2026) + PC (cadangan) — lihat versi_gee dan versi_pc",
+ "versi_gee": {
+  "versi": "GEE — Google Earth Engine, run final 11 Nov 2026 (notebook commit cf5e289, setelah perbaikan bug validasi 2026 dan mask bersama)",
   "akurasi_2025": {
-    "OA": 0.6789333333333334,
-    "Kappa": 0.5986666666666667,
-    "confusion_matrix": [
-      [
-        638,
-        3,
-        50,
-        7,
-        52
-      ],
-      [
-        3,
-        485,
-        39,
-        84,
-        139
-      ],
-      [
-        56,
-        62,
-        552,
-        11,
-        69
-      ],
-      [
-        15,
-        138,
-        18,
-        459,
-        120
-      ],
-      [
-        134,
-        62,
-        56,
-        86,
-        412
-      ]
+   "OA": 0.8184,
+   "Kappa": 0.7635,
+   "producers": [
+    0.947,
+    0.905,
+    0.905,
+    0.594,
+    0.664
+   ],
+   "users": [
+    0.911,
+    0.73,
+    0.963,
+    0.83,
+    0.696
+   ],
+   "confusion_matrix": [
+    [
+     659,
+     5,
+     3,
+     3,
+     26
     ],
-    "producers": [
-      0.8506666666666667,
-      0.6466666666666666,
-      0.736,
-      0.612,
-      0.5493333333333333
+    [
+     4,
+     428,
+     1,
+     9,
+     31
     ],
-    "users": [
-      0.7541371158392435,
-      0.6466666666666666,
-      0.772027972027972,
-      0.7094281298299846,
-      0.5202020202020202
+    [
+     3,
+     7,
+     182,
+     1,
+     8
+    ],
+    [
+     1,
+     105,
+     1,
+     230,
+     50
+    ],
+    [
+     56,
+     41,
+     2,
+     34,
+     263
     ]
+   ],
+   "n_validasi": 2153
   },
   "akurasi_2026": {
-    "OA": 0.6890666666666667,
-    "Kappa": 0.6113333333333333,
-    "confusion_matrix": [
-      [
-        611,
-        1,
-        61,
-        9,
-        68
-      ],
-      [
-        6,
-        535,
-        68,
-        51,
-        90
-      ],
-      [
-        46,
-        52,
-        614,
-        7,
-        31
-      ],
-      [
-        13,
-        153,
-        33,
-        429,
-        122
-      ],
-      [
-        128,
-        65,
-        88,
-        74,
-        395
-      ]
+   "OA": 0.8175,
+   "Kappa": 0.7639,
+   "producers": [
+    0.915,
+    0.911,
+    0.965,
+    0.651,
+    0.621
+   ],
+   "users": [
+    0.961,
+    0.732,
+    0.911,
+    0.766,
+    0.685
+   ],
+   "confusion_matrix": [
+    [
+     637,
+     9,
+     3,
+     3,
+     44
     ],
-    "producers": [
-      0.8146666666666667,
-      0.7133333333333334,
-      0.8186666666666667,
-      0.572,
-      0.5266666666666666
+    [
+     0,
+     431,
+     2,
+     28,
+     12
     ],
-    "users": [
-      0.7599502487562189,
-      0.6637717121588089,
-      0.7106481481481481,
-      0.7526315789473684,
-      0.5594900849858357
+    [
+     1,
+     5,
+     194,
+     0,
+     1
+    ],
+    [
+     0,
+     75,
+     4,
+     252,
+     56
+    ],
+    [
+     25,
+     69,
+     10,
+     46,
+     246
     ]
+   ],
+   "n_validasi": 2153
   },
   "luas_ha": {
-    "2025": {
-      "Hutan": 261756.36,
-      "Pertanian & Perkebunan": 40028.76,
-      "Permukiman / Lahan Terbangun": 35134.47,
-      "Badan Air & Rawa": 27846.09,
-      "Lahan Terbuka & Semak Belukar": 66074.13,
-      "TOTAL": 430839.81
-    },
-    "2026": {
-      "Hutan": 254677.86,
-      "Pertanian & Perkebunan": 45037.08,
-      "Permukiman / Lahan Terbangun": 43998.479999999996,
-      "Badan Air & Rawa": 22200.3,
-      "Lahan Terbuka & Semak Belukar": 64926.09,
-      "TOTAL": 430839.81
-    }
+   "2025": {
+    "Hutan": 322618.6,
+    "Pertanian & Perkebunan": 62541.4,
+    "Permukiman / Lahan Terbangun": 5554.2,
+    "Badan Air & Rawa": 19218.1,
+    "Lahan Terbuka & Semak Belukar": 56618.7,
+    "TOTAL": 466551.0
+   },
+   "2026": {
+    "Hutan": 302227.7,
+    "Pertanian & Perkebunan": 69370.1,
+    "Permukiman / Lahan Terbangun": 8453.5,
+    "Badan Air & Rawa": 22676.0,
+    "Lahan Terbuka & Semak Belukar": 63853.9,
+    "TOTAL": 466581.1
+   },
+   "selisih_total_ha": 30.1,
+   "catatan": "Selisih total 30,1 ha (0,006%) — jauh membaik dari 4.964 ha sebelum perbaikan mask bersama; sisa selisih berasal dari pembulatan piksel tepi dan perbedaan luas piksel geodesik vs nominal 30 m. Luas dihitung dari piksel 30 m di dalam batas geoBoundaries ADM2; total ~466.600 ha vs BPS 466.850 ha."
   },
   "matriks_transisi_ha": {
-    "1->1": 243597.15,
-    "1->2": 23.939999999999998,
-    "1->3": 6544.98,
-    "1->4": 293.49,
-    "1->5": 11296.8,
-    "2->1": 31.68,
-    "2->2": 33556.229999999996,
-    "2->3": 2027.34,
-    "2->4": 2800.98,
-    "2->5": 1612.53,
-    "3->1": 4573.08,
-    "3->2": 1232.37,
-    "3->3": 25878.42,
-    "3->4": 237.69,
-    "3->5": 3212.91,
-    "4->1": 563.49,
-    "4->2": 5650.74,
-    "4->3": 607.41,
-    "4->4": 15769.8,
-    "4->5": 5254.65,
-    "5->1": 5912.46,
-    "5->2": 4573.8,
-    "5->3": 8940.33,
-    "5->4": 3098.3399999999997,
-    "5->5": 43549.2
+   "1->1": 298974.0,
+   "1->2": 3004.0,
+   "1->3": 806.0,
+   "1->4": 293.0,
+   "1->5": 19541.0,
+   "2->1": 189.0,
+   "2->2": 51951.0,
+   "2->3": 1303.0,
+   "2->4": 5413.0,
+   "2->5": 3686.0,
+   "3->1": 83.0,
+   "3->2": 358.0,
+   "3->3": 4699.0,
+   "3->4": 53.0,
+   "3->5": 361.0,
+   "4->1": 149.0,
+   "4->2": 3824.0,
+   "4->3": 431.0,
+   "4->4": 11312.0,
+   "4->5": 3501.0,
+   "5->1": 2805.0,
+   "5->2": 10232.0,
+   "5->3": 1214.0,
+   "5->4": 5604.0,
+   "5->5": 36763.0
   },
   "transisi_terbesar_ha": [
-    {
-      "dari": "Hutan",
-      "ke": "Lahan Terbuka & Semak Belukar",
-      "ha": 11296.8
-    },
-    {
-      "dari": "Lahan Terbuka & Semak Belukar",
-      "ke": "Permukiman / Lahan Terbangun",
-      "ha": 8940.33
-    },
-    {
-      "dari": "Hutan",
-      "ke": "Permukiman / Lahan Terbangun",
-      "ha": 6544.98
-    }
+   {
+    "dari": "Hutan",
+    "ke": "Lahan Terbuka & Semak Belukar",
+    "ha": 19541.4
+   },
+   {
+    "dari": "Lahan Terbuka & Semak Belukar",
+    "ke": "Pertanian & Perkebunan",
+    "ha": 10232.3
+   },
+   {
+    "dari": "Lahan Terbuka & Semak Belukar",
+    "ke": "Badan Air & Rawa",
+    "ha": 5603.7
+   }
+  ],
+  "tidak_berubah_ha": 403699.0,
+  "berubah_ha": 62852.0,
+  "catatan_akurasi": "OA dan Kappa 2026 kini independen dari 2025 (berbeda: OA 0,8175 vs 0,8184) — bug sampleRegions 2026 sudah diperbaiki dan diuji ulang 11 Nov 2026. Keduanya masih di bawah target OA >= 0,85 dan Kappa >= 0,80; akurasi terhadap label ESA WorldCover 2021, bukan cek lapangan."
+ },
+ "versi_pc": {
+  "akurasi_2025": {
+   "OA": 0.6789333333333334,
+   "Kappa": 0.5986666666666667,
+   "confusion_matrix": [
+    [
+     638,
+     3,
+     50,
+     7,
+     52
+    ],
+    [
+     3,
+     485,
+     39,
+     84,
+     139
+    ],
+    [
+     56,
+     62,
+     552,
+     11,
+     69
+    ],
+    [
+     15,
+     138,
+     18,
+     459,
+     120
+    ],
+    [
+     134,
+     62,
+     56,
+     86,
+     412
+    ]
+   ],
+   "producers": [
+    0.8506666666666667,
+    0.6466666666666666,
+    0.736,
+    0.612,
+    0.5493333333333333
+   ],
+   "users": [
+    0.7541371158392435,
+    0.6466666666666666,
+    0.772027972027972,
+    0.7094281298299846,
+    0.5202020202020202
+   ]
+  },
+  "akurasi_2026": {
+   "OA": 0.6890666666666667,
+   "Kappa": 0.6113333333333333,
+   "confusion_matrix": [
+    [
+     611,
+     1,
+     61,
+     9,
+     68
+    ],
+    [
+     6,
+     535,
+     68,
+     51,
+     90
+    ],
+    [
+     46,
+     52,
+     614,
+     7,
+     31
+    ],
+    [
+     13,
+     153,
+     33,
+     429,
+     122
+    ],
+    [
+     128,
+     65,
+     88,
+     74,
+     395
+    ]
+   ],
+   "producers": [
+    0.8146666666666667,
+    0.7133333333333334,
+    0.8186666666666667,
+    0.572,
+    0.5266666666666666
+   ],
+   "users": [
+    0.7599502487562189,
+    0.6637717121588089,
+    0.7106481481481481,
+    0.7526315789473684,
+    0.5594900849858357
+   ]
+  },
+  "luas_ha": {
+   "2025": {
+    "Hutan": 261756.36,
+    "Pertanian & Perkebunan": 40028.76,
+    "Permukiman / Lahan Terbangun": 35134.47,
+    "Badan Air & Rawa": 27846.09,
+    "Lahan Terbuka & Semak Belukar": 66074.13,
+    "TOTAL": 430839.81
+   },
+   "2026": {
+    "Hutan": 254677.86,
+    "Pertanian & Perkebunan": 45037.08,
+    "Permukiman / Lahan Terbangun": 43998.479999999996,
+    "Badan Air & Rawa": 22200.3,
+    "Lahan Terbuka & Semak Belukar": 64926.09,
+    "TOTAL": 430839.81
+   }
+  },
+  "matriks_transisi_ha": {
+   "1->1": 243597.15,
+   "1->2": 23.939999999999998,
+   "1->3": 6544.98,
+   "1->4": 293.49,
+   "1->5": 11296.8,
+   "2->1": 31.68,
+   "2->2": 33556.229999999996,
+   "2->3": 2027.34,
+   "2->4": 2800.98,
+   "2->5": 1612.53,
+   "3->1": 4573.08,
+   "3->2": 1232.37,
+   "3->3": 25878.42,
+   "3->4": 237.69,
+   "3->5": 3212.91,
+   "4->1": 563.49,
+   "4->2": 5650.74,
+   "4->3": 607.41,
+   "4->4": 15769.8,
+   "4->5": 5254.65,
+   "5->1": 5912.46,
+   "5->2": 4573.8,
+   "5->3": 8940.33,
+   "5->4": 3098.3399999999997,
+   "5->5": 43549.2
+  },
+  "transisi_terbesar_ha": [
+   {
+    "dari": "Hutan",
+    "ke": "Lahan Terbuka & Semak Belukar",
+    "ha": 11296.8
+   },
+   {
+    "dari": "Lahan Terbuka & Semak Belukar",
+    "ke": "Permukiman / Lahan Terbangun",
+    "ha": 8940.33
+   },
+   {
+    "dari": "Hutan",
+    "ke": "Permukiman / Lahan Terbangun",
+    "ha": 6544.98
+   }
   ]
+ },
+ "akurasi_2025": {
+  "OA": 0.8184,
+  "Kappa": 0.7635,
+  "producers": [
+   0.947,
+   0.905,
+   0.905,
+   0.594,
+   0.664
+  ],
+  "users": [
+   0.911,
+   0.73,
+   0.963,
+   0.83,
+   0.696
+  ],
+  "confusion_matrix": [
+   [
+    659,
+    5,
+    3,
+    3,
+    26
+   ],
+   [
+    4,
+    428,
+    1,
+    9,
+    31
+   ],
+   [
+    3,
+    7,
+    182,
+    1,
+    8
+   ],
+   [
+    1,
+    105,
+    1,
+    230,
+    50
+   ],
+   [
+    56,
+    41,
+    2,
+    34,
+    263
+   ]
+  ],
+  "n_validasi": 2153
+ },
+ "akurasi_2026": {
+  "OA": 0.8175,
+  "Kappa": 0.7639,
+  "producers": [
+   0.915,
+   0.911,
+   0.965,
+   0.651,
+   0.621
+  ],
+  "users": [
+   0.961,
+   0.732,
+   0.911,
+   0.766,
+   0.685
+  ],
+  "confusion_matrix": [
+   [
+    637,
+    9,
+    3,
+    3,
+    44
+   ],
+   [
+    0,
+    431,
+    2,
+    28,
+    12
+   ],
+   [
+    1,
+    5,
+    194,
+    0,
+    1
+   ],
+   [
+    0,
+    75,
+    4,
+    252,
+    56
+   ],
+   [
+    25,
+    69,
+    10,
+    46,
+    246
+   ]
+  ],
+  "n_validasi": 2153
+ },
+ "luas_ha": {
+  "2025": {
+   "Hutan": 322618.6,
+   "Pertanian & Perkebunan": 62541.4,
+   "Permukiman / Lahan Terbangun": 5554.2,
+   "Badan Air & Rawa": 19218.1,
+   "Lahan Terbuka & Semak Belukar": 56618.7,
+   "TOTAL": 466551.0
+  },
+  "2026": {
+   "Hutan": 302227.7,
+   "Pertanian & Perkebunan": 69370.1,
+   "Permukiman / Lahan Terbangun": 8453.5,
+   "Badan Air & Rawa": 22676.0,
+   "Lahan Terbuka & Semak Belukar": 63853.9,
+   "TOTAL": 466581.1
+  },
+  "selisih_total_ha": 30.1,
+  "catatan": "Selisih total 30,1 ha (0,006%) — jauh membaik dari 4.964 ha sebelum perbaikan mask bersama; sisa selisih berasal dari pembulatan piksel tepi dan perbedaan luas piksel geodesik vs nominal 30 m. Luas dihitung dari piksel 30 m di dalam batas geoBoundaries ADM2; total ~466.600 ha vs BPS 466.850 ha."
+ },
+ "matriks_transisi_ha": {
+  "1->1": 298974.0,
+  "1->2": 3004.0,
+  "1->3": 806.0,
+  "1->4": 293.0,
+  "1->5": 19541.0,
+  "2->1": 189.0,
+  "2->2": 51951.0,
+  "2->3": 1303.0,
+  "2->4": 5413.0,
+  "2->5": 3686.0,
+  "3->1": 83.0,
+  "3->2": 358.0,
+  "3->3": 4699.0,
+  "3->4": 53.0,
+  "3->5": 361.0,
+  "4->1": 149.0,
+  "4->2": 3824.0,
+  "4->3": 431.0,
+  "4->4": 11312.0,
+  "4->5": 3501.0,
+  "5->1": 2805.0,
+  "5->2": 10232.0,
+  "5->3": 1214.0,
+  "5->4": 5604.0,
+  "5->5": 36763.0
+ },
+ "transisi_terbesar_ha": [
+  {
+   "dari": "Hutan",
+   "ke": "Lahan Terbuka & Semak Belukar",
+   "ha": 19541.4
+  },
+  {
+   "dari": "Lahan Terbuka & Semak Belukar",
+   "ke": "Pertanian & Perkebunan",
+   "ha": 10232.3
+  },
+  {
+   "dari": "Lahan Terbuka & Semak Belukar",
+   "ke": "Badan Air & Rawa",
+   "ha": 5603.7
+  }
+ ]
 }

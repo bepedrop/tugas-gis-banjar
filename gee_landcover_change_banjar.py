@@ -30,10 +30,15 @@ Isi pipeline SAMA dengan versi Planetary Computer (tanpa-login):
   - Perubahan: post-classification comparison (matriks transisi + luas).
   - Hasil diekspor ke Google Drive (GeoTIFF) dan dicetak di console.
 
-CATATAN HASIL: versi Planetary Computer (metode sama) mencapai
-OA 2025 = 0,679, Kappa = 0,599; OA 2026 = 0,689, Kappa = 0,611
-— di bawah target OA >= 0,85. Versi GEE ini BELUM pernah dijalankan
-(belum ada login GEE); angka di atas hanya dari versi PC.
+CATATAN HASIL (run final 11 Nov 2026, Colab, commit cf5e289):
+versi GEE mencapai OA 2025 = 0,818, Kappa = 0,764; OA 2026 = 0,818,
+Kappa = 0,764 — masih di bawah target OA >= 0,85 dan Kappa >= 0,80,
+laporkan apa adanya. Versi Planetary Computer (metode sama) mencapai
+OA 2025 = 0,679, Kappa = 0,599; OA 2026 = 0,689, Kappa = 0,611.
+Dua bug diperbaiki sebelum run final: (1) validasi 2026 menduplikasi
+fitur 2025 (sampleRegions tidak menimpa properti lama) — diperbaiki
+dengan hanya_geometri_dan_kelas(); (2) selisih total luas 4.964 ha —
+diperbaiki dengan mask bersama, sisa selisih 30,1 ha (0,006%).
 """
 import ee
 

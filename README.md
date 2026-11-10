@@ -57,25 +57,31 @@ lat −3,7307–−2,8282. CRS kerja **EPSG:32650 (UTM zona 50S)**, resolusi 30 
 | **Google Earth Engine (GEE)** | `gee_landcover_change_banjar.py`, `landcover_change_banjar_GEE.ipynb` | Punya akun GEE + Google Cloud project; komputasi di cloud Google, hasil diekspor ke Google Drive folder `GEE_Banjar` |
 
 Kedua jalur menghasilkan 5 kelas, matriks transisi, dan akurasi yang sama.
-**Catatan:** versi GEE belum pernah dieksekusi end-to-end (belum ada login GEE
-saat penyusunan); jalankan sendiri di Colab dengan akun GEE Anda, lalu
-bandingkan hasilnya dengan versi PC. Versi PC sudah dijalankan penuh dan
-hasilnya adalah angka pada bagian 6–8 di bawah ini.
+**Hasil utama (bagian 6–8) adalah versi GEE** — dijalankan penuh di Colab
+11 Nov 2026 (run final, setelah perbaikan bug validasi 2026 dan mask
+bersama; OA 0,818 / Kappa 0,764). Versi PC (OA 0,679 / 0,689) dipakai
+sebagai cadangan/validasi silang; angkanya tersimpan di `output/statistik.json`
+bagian `versi_pc` dan dibandingkan pada bagian 8 di bawah.
 
-## 6. Hasil — luas per kelas (ha)
+## 6. Hasil — luas per kelas (ha, versi GEE)
 
-Luas yang terklasifikasi (mask bersama): **430.839,8 ha** untuk kedua tahun
-(= 91,2% dari luas poligon Banjar 472.549 ha; sisanya 41.709 ha / 8,8%
-tidak terklasifikasi karena ada celah awan di salah satu tahun).
+Luas yang terklasifikasi (mask bersama): **466.551,0 ha (2025)** dan
+**466.581,1 ha (2026)** — selisih total hanya **30,1 ha (0,006%)**,
+setelah perbaikan mask bersama (sebelum perbaikan selisihnya 4.964 ha).
+Total ini = 98,8% dari luas poligon Banjar 472.549 ha; sisanya piksel
+tanpa data di salah satu tahun. Luas piksel dihitung dari piksel 30 m;
+GeoTIFF hasil ekspor (reproyeksi ke UTM) dapat berbeda <0,3% per total
+karena resampling — angka tabel ini memakai hasil `reduceRegion`
+notebook GEE.
 
 | Kelas | 2025 (ha) | 2026 (ha) | Perubahan (ha) | Perubahan (%) | Pangsa 2025 | Pangsa 2026 |
 |---|---|---|---|---|---|---|
-| 1 Hutan | 261.756,4 | 254.677,9 | −7.078,5 | −2,70% | 60,8% | 59,1% |
-| 2 Pertanian & Perkebunan | 40.028,8 | 45.037,1 | +5.008,3 | +12,51% | 9,3% | 10,5% |
-| 3 Permukiman / Lahan Terbangun | 35.134,5 | 43.998,5 | +8.864,0 | +25,23% | 8,2% | 10,2% |
-| 4 Badan Air & Rawa | 27.846,1 | 22.200,3 | −5.645,8 | −20,27% | 6,5% | 5,2% |
-| 5 Lahan Terbuka & Semak Belukar | 66.074,1 | 64.926,1 | −1.148,0 | −1,74% | 15,3% | 15,1% |
-| **TOTAL terklasifikasi** | **430.839,8** | **430.839,8** | **0** | — | 100% | 100% |
+| 1 Hutan | 322.618,6 | 302.227,7 | −20.390,9 | −6,32% | 69,2% | 64,8% |
+| 2 Pertanian & Perkebunan | 62.541,4 | 69.370,1 | +6.828,7 | +10,92% | 13,4% | 14,9% |
+| 3 Permukiman / Lahan Terbangun | 5.554,2 | 8.453,5 | +2.899,3 | +52,20% | 1,2% | 1,8% |
+| 4 Badan Air & Rawa | 19.218,1 | 22.676,0 | +3.457,9 | +17,99% | 4,1% | 4,9% |
+| 5 Lahan Terbuka & Semak Belukar | 56.618,7 | 63.853,9 | +7.235,2 | +12,78% | 12,1% | 13,7% |
+| **TOTAL terklasifikasi** | **466.551,0** | **466.581,1** | **+30,1** | — | 100% | 100% |
 
 ## 7. Hasil — matriks transisi 2025 → 2026 (ha)
 
@@ -84,53 +90,77 @@ jumlah kolom = luas 2026 per kelas (terverifikasi konsisten).
 
 | Dari \ Ke | Hutan | Pertanian & Perkebunan | Permukiman | Badan Air & Rawa | Terbuka & Semak |
 |---|---|---|---|---|---|
-| **Hutan** | 243.597,1 | 23,9 | 6.545,0 | 293,5 | 11.296,8 |
-| **Pertanian & Perkebunan** | 31,7 | 33.556,2 | 2.027,3 | 2.801,0 | 1.612,5 |
-| **Permukiman** | 4.573,1 | 1.232,4 | 25.878,4 | 237,7 | 3.212,9 |
-| **Badan Air & Rawa** | 563,5 | 5.650,7 | 607,4 | 15.769,8 | 5.254,6 |
-| **Terbuka & Semak** | 5.912,5 | 4.573,8 | 8.940,3 | 3.098,3 | 43.549,2 |
+| **Hutan** | 298.974 | 3.004 | 806 | 293 | 19.541 |
+| **Pertanian & Perkebunan** | 189 | 51.951 | 1.303 | 5.413 | 3.686 |
+| **Permukiman** | 83 | 358 | 4.699 | 53 | 361 |
+| **Badan Air & Rawa** | 149 | 3.824 | 431 | 11.312 | 3.501 |
+| **Terbuka & Semak** | 2.805 | 10.232 | 1.214 | 5.604 | 36.763 |
 
-- Tidak berubah: **362.350,8 ha (84,1%)**; berubah: **68.489,0 ha (15,9%)**.
+- Tidak berubah: **403.699 ha (86,5%)**; berubah: **62.852 ha (13,5%)**.
 - 3 transisi perubahan terbesar:
-  1. Hutan → Lahan Terbuka & Semak Belukar: **11.296,8 ha**
-  2. Lahan Terbuka & Semak Belukar → Permukiman / Lahan Terbangun: **8.940,3 ha**
-  3. Hutan → Permukiman / Lahan Terbangun: **6.545,0 ha**
+  1. Hutan → Lahan Terbuka & Semak Belukar: **19.541,4 ha**
+  2. Lahan Terbuka & Semak Belukar → Pertanian & Perkebunan: **10.232,3 ha**
+  3. Lahan Terbuka & Semak Belukar → Badan Air & Rawa: **5.603,7 ha**
 
 ## 8. Hasil — akurasi (terhadap label WorldCover 2021, bukan cek lapangan)
 
 | | 2025 | 2026 |
 |---|---|---|
-| **Overall Accuracy (OA)** | **0,679** | **0,689** |
-| **Kappa** | **0,599** | **0,611** |
+| **Overall Accuracy (OA)** | **0,818** | **0,818** |
+| **Kappa** | **0,764** | **0,764** |
+
+Validasi 30%, n = 2.153 titik per tahun. OA/Kappa kedua tahun kini
+**independen** (2025: OA 0,8184 / Kappa 0,7635; 2026: OA 0,8175 /
+Kappa 0,7639) — run final 11 Nov 2026 setelah perbaikan bug validasi
+2026 (dulu tercetak identik persis dengan 2025).
 
 Confusion matrix 2025 (baris = referensi, kolom = prediksi):
-Hutan [638, 3, 50, 7, 52]; Pertanian [3, 485, 39, 84, 139];
-Permukiman [56, 62, 552, 11, 69]; Air/Rawa [15, 138, 18, 459, 120];
-Terbuka/Semak [134, 62, 56, 86, 412].
+Hutan [659, 5, 3, 3, 26]; Pertanian [4, 428, 1, 9, 31];
+Permukiman [3, 7, 182, 1, 8]; Air/Rawa [1, 105, 1, 230, 50];
+Terbuka/Semak [56, 41, 2, 34, 263].
 
 Confusion matrix 2026:
-Hutan [611, 1, 61, 9, 68]; Pertanian [6, 535, 68, 51, 90];
-Permukiman [46, 52, 614, 7, 31]; Air/Rawa [13, 153, 33, 429, 122];
-Terbuka/Semak [128, 65, 88, 74, 395].
+Hutan [637, 9, 3, 3, 44]; Pertanian [0, 431, 2, 28, 12];
+Permukiman [1, 5, 194, 0, 1]; Air/Rawa [0, 75, 4, 252, 56];
+Terbuka/Semak [25, 69, 10, 46, 246].
 
 Producer's / User's accuracy per kelas, 2025:
-Hutan 0,851 / 0,754; Pertanian 0,647 / 0,647; Permukiman 0,736 / 0,772;
-Air/Rawa 0,612 / 0,709; Terbuka/Semak 0,549 / 0,520.
-2026: Hutan 0,815 / 0,760; Pertanian 0,713 / 0,664; Permukiman 0,819 / 0,711;
-Air/Rawa 0,572 / 0,753; Terbuka/Semak 0,527 / 0,559.
+Hutan 0,947 / 0,911; Pertanian 0,905 / 0,730; Permukiman 0,905 / 0,963;
+Air/Rawa 0,594 / 0,830; Terbuka/Semak 0,664 / 0,696.
+2026: Hutan 0,915 / 0,961; Pertanian 0,911 / 0,732; Permukiman 0,965 / 0,911;
+Air/Rawa 0,651 / 0,766; Terbuka/Semak 0,621 / 0,685.
 
-**Target tugas OA ≥ 0,85 dan Kappa ≥ 0,80 TIDAK tercapai.** Upaya perbaikan
-yang sudah dicoba (dan hasilnya):
+**Target tugas OA ≥ 0,85 dan Kappa ≥ 0,80 TIDAK tercapai** (OA 0,818,
+Kappa 0,764 — lebih baik dari versi PC 0,679/0,689, tapi masih di bawah
+target). Upaya perbaikan yang sudah dicoba (dan hasilnya):
 - v1 (9 fitur: 6 band + NDVI/NDWI/NDBI; latih hanya 2025; 1.500 sampel/kelas):
   OA 2025 = 0,621, Kappa 0,526; cek silang ke 2026 runtuh ke OA 0,535.
-- v2 (14 fitur + DEM/kemiringan + 5 indeks tambahan; latih pooled dua tahun;
+- v2 PC (14 fitur + DEM/kemiringan + 5 indeks tambahan; latih pooled dua tahun;
   2.500 sampel/kelas; kemurnian ≥ 8/9): OA 0,679 / 0,689, Kappa 0,599 / 0,611.
 - ExtraTrees 300 pohon (pooled): OA 0,662 / 0,669 — **lebih buruk** dari RF.
 - Pembersihan label latih berbasis aturan spektral: tidak selesai diuji
   (proses kehabisan memori); tidak dilaporkan sebagai hasil.
+- GEE final (11 Nov 2026): perbaikan bug validasi 2026 + mask bersama —
+  OA 0,818 / 0,818, Kappa 0,764 / 0,764.
 
-Kepentingan fitur model v2: elevasi 0,201; kemiringan 0,160; sisanya
+Kepentingan fitur model v2 (versi PC): elevasi 0,201; kemiringan 0,160; sisanya
 0,038–0,076 (NDWI 0,076 tertinggi di antara fitur spektral).
+
+### Perbandingan versi GEE vs PC
+
+| Besaran | GEE (utama) | PC (cadangan) |
+|---|---|---|
+| OA 2025 / Kappa 2025 | 0,818 / 0,764 | 0,679 / 0,599 |
+| OA 2026 / Kappa 2026 | 0,818 / 0,764 | 0,689 / 0,611 |
+| Hutan 2025 → 2026 (ha) | 322.619 → 302.228 | 261.756 → 254.678 |
+| Permukiman 2025 → 2026 (ha) | 5.554 → 8.454 | 35.135 → 43.999 |
+| Luas terklasifikasi (ha) | 466.551 / 466.581 | 430.840 / 430.840 |
+| Transisi terbesar | Hutan → Terbuka 19.541 ha | Hutan → Terbuka 11.297 ha |
+
+Kedua versi searah (hutan berkurang, lahan terbuka bertambah, transisi
+terbesar sama), tetapi besaran luas berbeda karena GEE mengklasifikasi
+hampir seluruh wilayah (466,6 ribu ha) sedangkan PC mengeluarkan piksel
+termasking awan (430,8 ribu ha).
 
 ## 9. Cara menjalankan
 
@@ -174,14 +204,15 @@ filenya sudah ada, seperti pada script `.py`.
 ### WebGIS
 
 Buka `peta_perubahan_tutupan_lahan_banjar.html` di browser (file tunggal,
-Leaflet via CDN, butuh internet untuk basemap OSM). Overlay raster
-di-downsample 4× (~120 m) agar file ringan (0,37 MB).
+Leaflet di-inline, butuh internet hanya untuk basemap OSM). Overlay raster
+di-downsample 4× (~120 m) agar file ringan (0,85 MB). Peta dan tabel di
+dalamnya memakai hasil versi GEE final.
 
 ## 10. File hasil
 
 | File | Isi / ukuran |
 |---|---|
-| `peta_perubahan_tutupan_lahan_banjar.html` | WebGIS interaktif (0,37 MB) |
+| `peta_perubahan_tutupan_lahan_banjar.html` | WebGIS interaktif versi GEE (0,85 MB) |
 | `output/klasifikasi_2025.tif` | Klasifikasi 2025, EPSG:32650, 30 m, 5 kelas + nodata (0,51 MB) |
 | `output/klasifikasi_2026.tif` | Klasifikasi 2026, sama (0,53 MB) |
 | `output/perubahan_2025_2026.tif` | Kode perubahan 11–55 (0,85 MB) |
@@ -195,8 +226,8 @@ di-downsample 4× (~120 m) agar file ringan (0,37 MB).
 
 ## 11. Keterbatasan dan ketidakpastian — baca sebelum memakai angka
 
-1. **Akurasi di bawah target (OA 0,68, bukan 0,85).** Angka perubahan
-   (mis. Permukiman +25% dalam satu tahun) sebagian besar adalah
+1. **Akurasi di bawah target (OA 0,82, bukan 0,85).** Angka perubahan
+   (mis. Permukiman +52% dalam satu tahun) sebagian adalah
    **noise klasifikasi**, bukan perubahan nyata. Lihat LAPORAN_SINGKAT.md.
 2. **Tanpa cek lapangan.** Training/validasi memakai WorldCover 2021
    sebagai referensi. Sawit/karet di WorldCover umumnya tercatat sebagai
@@ -209,8 +240,9 @@ di-downsample 4× (~120 m) agar file ringan (0,37 MB).
    musim kemarau Agu–Sep 2026): rawa mengering (NDBI Badan Air & Rawa
    naik dari −0,157 ke +0,075; SWIR1 rerata naik), sehingga sebagian
    Badan Air & Rawa terklasifikasi sebagai Pertanian atau Terbuka/Semak.
-5. **8,8% wilayah tidak terklasifikasi** (celah awan di salah satu tahun,
-   terutama tile 117/062 pada 2025 yang hanya punya 1 scene).
+5. **1,2% wilayah tidak terklasifikasi pada versi GEE** (piksel tanpa data
+   di salah satu tahun; pada versi PC 8,8% karena celah awan, terutama
+   tile 117/062 pada 2025 yang hanya punya 1 scene).
 6. **Tumpang tindih spektral** antar 5 kelas yang luas: kebingungan
    terbesar Terbuka/Semak ↔ Hutan dan Air/Rawa ↔ Pertanian.
 7. **DEM mendominasi model** (kepentingan 0,20 + 0,16): sebagian keputusan
@@ -221,9 +253,12 @@ di-downsample 4× (~120 m) agar file ringan (0,37 MB).
    lahan < 1 ha) tidak terdeteksi; sawah yang sedang bera terlihat
    seperti lahan terbuka.
 9. **Perubahan yang tampak tidak masuk akal** (mis. Permukiman 2025 →
-   Hutan 2026 seluas 4.573 ha) adalah artefak klasifikasi, bukan
-   penghijauan kembali permukiman.
-10. **Versi GEE belum dieksekusi** — angka hasil berasal dari versi PC.
+   Hutan 2026; pada versi PC seluas 4.573 ha) adalah artefak klasifikasi,
+   bukan penghijauan kembali permukiman.
+10. **Versi GEE sudah dieksekusi penuh** (run final 11 Nov 2026, Colab,
+    commit `cf5e289`); dua bug yang ditemukan selama pengerjaan — validasi
+    2026 yang menduplikasi 2025 dan selisih total luas 4.964 ha — sudah
+    diperbaiki dan diuji ulang.
 
 ## 12. Referensi
 
