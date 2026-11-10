@@ -1,6 +1,6 @@
 # Peta Perubahan Tutupan Lahan Kabupaten Banjar, Kalimantan Selatan, 2025 vs 2026
 
-**Mata kuliah:** Sistem Informasi Geografi (SIG) — **Dosen:** Dr. Ir. Mufidah Asy'ari, M.P.
+**Mata kuliah:** Sistem Informasi Geografi (SIG) — **Dosen:** Prof. Dr. Ir. Ahmad Jauhari, M.P.
 **Penyusun:** Boy (Program Studi Magister Kehutanan, Universitas Lambung Mangkurat)
 **Tanggal pengerjaan:** 10–11 November 2026
 

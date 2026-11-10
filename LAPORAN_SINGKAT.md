@@ -1,6 +1,6 @@
 # Laporan Singkat: Perubahan Tutupan Lahan Kabupaten Banjar 2025 vs 2026
 
-**Mata kuliah:** Sistem Informasi Geografi (SIG) — **Dosen:** Dr. Ir. Mufidah Asy'ari, M.P.
+**Mata kuliah:** Sistem Informasi Geografi (SIG) — **Dosen:** Prof. Dr. Ir. Ahmad Jauhari, M.P.
 **Wilayah:** Kabupaten Banjar, Kalimantan Selatan (4.668,50 km², BPS)
 **Citra:** Landsat 8/9 Collection 2 L2, komposit median Jun–Sep 2025 vs 2026
 **Metode:** Random Forest (300 pohon, 14 fitur: band B2–B7 + NDVI/NDWI/NDBI/EVI/NDMI/BSI + elevasi + kemiringan), latih pooled dua tahun, label referensi ESA WorldCover 2021
